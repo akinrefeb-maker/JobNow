@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobNow - Job Listings</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      color: #1a1a1a;
+    }
+
+    /* Header */
+    header {
+      background: #1a1a1a;
+      padding: 25px;
+      text-align: center;
+      color: #e0e0e0;
+      font-size: 26px;
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Search Box */
+    .search-box {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 30px;
+      border-left: 5px solid #8b6f47;
+    }
+
+    .search-box input,
+    .search-box select {
+      padding: 12px;
+      flex: 1;
+      min-width: 180px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      background: #fafafa;
+    }
+
+    .search-box input:focus,
+    .search-box select:focus {
+      border-color: #8b6f47;
+      outline: none;
+    }
+
+    /* Job Card */
+    .job-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border-left: 5px solid #3b3b3b;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .job-card:hover {
+      transform: translateY(-3px);
+      border-left-color: #8b6f47;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .job-card h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      color: #1a1a1a;
+    }
+
+    .job-card p {
+      margin: 3px 0;
+      color: #3b3b3b;
+      font-size: 14px;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .pagination button {
+      padding: 10px 18px;
+      border: none;
+      background: #8b6f47;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s ease;
+    }
+
+    .pagination button:hover {
+      background: #6f5737;
+    }
+
+    .pagination button:disabled {
+      background: #b8b8b8;
+      cursor: not-allowed;
+    }
+
+    /* Job Details */
+    #jobDetails {
+      display: none;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border-left: 5px solid #8b6f47;
+    }
+
+    #jobDetails h2 {
+      margin-top: 0;
+      color: #1a1a1a;
+    }
+
+    #backBtn {
+      padding: 10px 15px;
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      transition: 0.2s ease;
+    }
+
+    #backBtn:hover {
+      background: #3b3b3b;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .search-box {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>JobNow — Find Jobs Easily</header>
+
+<div class="container">
+
+  <!-- Search Filters -->
+  <div class="search-box">
+    <input type="text" id="searchTitle" placeholder="Search job title..." />
+    <select id="searchLocation"></select>
+    <select id="searchMode">
+      <option value="">Work Mode</option>
+      <option>Remote</option>
+      <option>Onsite</option>
+    </select>
+    <select id="sortBy">
+  <option value="newest">Newest First</option>
+  <option value="oldest">Oldest First</option>
+</select>
+
+  </div>
+
+  <!-- Job Listings -->
+  <div id="jobListings"></div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <button id="prevBtn">Prev</button>
+    <button id="nextBtn">Next</button>
+  </div>
+
+  <!-- Job Details -->
+  <div id="jobDetails"></div>
+
+</div>
+
+<script>
+  /* Generate 100 Sample Jobs */
+  const states = ["Lagos","Ogun","Oyo","Abuja","Kaduna","Rivers","Delta","Kano","Enugu","Edo"];  
+  const titles = ["Frontend Developer","Backend Developer","Graphics Designer","Sales Executive","Accountant","Project Manager","Data Analyst","Customer Support","Office Assistant","Marketing Officer"];  
+
+  /*const jobs = [];
+  for (let i = 1; i <= 100; i++) {
+    jobs.push({
+      id: i,
+      title: titles[Math.floor(Math.random() * titles.length)],
+      location: states[Math.floor(Math.random() * states.length)],
+      mode: Math.random() > 0.5 ? "Remote" : "Onsite",
+      description: "This is the detailed job description for job ID " + i
+    });
+  }*/
+  
+  const jobs = [
+  {
+    id: 1,
+    title: "Sales Executive",
+    location: "Lagos",
+    mode: "Onsite",
+    datePosted: "2025-12-13",
+    description: "Sell products, attend to walk-in customers and meet monthly sales targets."
+  },
+
+  {
+    id: 2,
+    title: "Frontend Developer",
+    location: "Abuja",
+    mode: "Remote",
+    datePosted: "2025-12-12",
+    description: "Build responsive web interfaces using HTML, CSS and JavaScript."
+  },
+
+  {
+    id: 3,
+    title: "Account Officer",
+    location: "Ogun",
+    mode: "Onsite",
+    datePosted: "2025-12-14",
+    description: "Manage company accounts, prepare financial reports and handle invoicing."
+  }
+];
+  
+  jobs.sort((a, b) => new Date(b.datePosted) - new Date(a.datePosted));
+
+
+  /* Populate location filter */
+  const locSelect = document.getElementById("searchLocation");
+  locSelect.innerHTML = `<option value="">All Locations</option>` +
+    states.map(s => `<option>${s}</option>`).join("");
+
+  const jobListings = document.getElementById("jobListings");
+  const searchTitle = document.getElementById("searchTitle");
+  const searchLocation = document.getElementById("searchLocation");
+  const searchMode = document.getElementById("searchMode");
+  const sortBy = document.getElementById("sortBy");
+
+
+  /* Pagination */
+  let currentPage = 1;
+  const jobsPerPage = 10;
+
+  function paginate(jobsArr) {
+    const start = (currentPage - 1) * jobsPerPage;
+    return jobsArr.slice(start, start + jobsPerPage);
+  }
+
+  /* Show job details */
+  const jobDetails = document.getElementById("jobDetails");
+  function openJobDetails(job) {
+    jobListings.style.display = "none";
+    document.querySelector('.pagination').style.display = "none";
+    jobDetails.style.display = "block";
+
+    // Modal controls
+const modal = document.getElementById("applyModal");
+const closeModalBtn = document.getElementById("closeModal");
+
+// Open modal when Apply Now is clicked
+document.addEventListener("click", function(e) {
+  if (e.target && e.target.id === "applyBtn") {
+    modal.style.display = "flex";
+  }
+});
+
+// Close modal
+closeModalBtn.onclick = () => modal.style.display = "none";
+
+// Submit application
+document.getElementById("submitApp").onclick = () => {
+  const app = {
+    name: document.getElementById("appName").value,
+    email: document.getElementById("appEmail").value,
+    phone: document.getElementById("appPhone").value,
+    cv: document.getElementById("appCV").value,
+    message: document.getElementById("appMessage").value,
+    date: new Date().toLocaleString()
+  };
+
+  // Save to local storage
+  let apps = JSON.parse(localStorage.getItem("jobApplications") || "[]");
+  apps.push(app);
+  localStorage.setItem("jobApplications", JSON.stringify(apps));
+
+  alert("Application submitted successfully!");
+
+  modal.style.display = "none";
+};
+    
+    jobDetails.innerHTML = `
+  <button id="backBtn">Back</button>
+
+  <h2>${job.title}</h2>
+  <p><strong>Location:</strong> ${job.location}</p>
+  <p><strong>Work Mode:</strong> ${job.mode}</p>
+  <p><strong>Date Posted:</strong> ${job.datePosted}</p>
+  <p>${job.description}</p>
+
+  <button id="applyBtn" style="
+    margin-top:20px;
+    padding:12px 20px;
+    background:#8b6f47;
+    color:white;
+    border:none;
+    border-radius:5px;
+    font-size:15px;
+    cursor:pointer;
+  ">Apply Now</button>
+`;
+
+
+
+    document.getElementById("backBtn").onclick = () => {
+      jobDetails.style.display = "none";
+      jobListings.style.display = "block";
+      document.querySelector('.pagination').style.display = "flex";
+    };
+  }
+
+ /* Display jobs */
+function displayJobs(filterJobs) {
+  jobListings.innerHTML = "";  // Clear previous job listings
+
+  paginate(filterJobs).forEach(job => {
+    const card = document.createElement("div");
+    card.className = "job-card";
+    card.innerHTML = `
+      <h3>${job.title}</h3>
+      <p><strong>Location:</strong> ${job.location}</p>
+      <p><strong>Mode:</strong> ${job.mode}</p>
+      <p><strong>Date Posted:</strong> ${job.datePosted}</p>
+    `;
+
+    card.onclick = () => openJobDetails(job);
+    jobListings.appendChild(card);
+  });
+
+  document.getElementById("prevBtn").disabled = currentPage === 1;
+  document.getElementById("nextBtn").disabled = currentPage === Math.ceil(filterJobs.length / jobsPerPage);
+}
+
+  /* Filter */
+function applyFilters() {
+  currentPage = 1;
+
+  let filtered = jobs.filter(job => (
+    job.title.toLowerCase().includes(searchTitle.value.toLowerCase()) &&
+    (searchLocation.value === "" || job.location === searchLocation.value) &&
+    (searchMode.value === "" || job.mode === searchMode.value)
+  ));
+
+  // 🔽 SORT LOGIC
+  if (sortBy.value === "newest") {
+    filtered.sort((a, b) => new Date(b.datePosted) - new Date(a.datePosted));
+  } else {
+    filtered.sort((a, b) => new Date(a.datePosted) - new Date(b.datePosted));
+  }
+
+  window.filteredJobs = filtered;
+  displayJobs(filtered);
+}
+
+  
+  // 🔔 Trigger filters when user interacts
+searchTitle.addEventListener("input", applyFilters);
+searchLocation.addEventListener("change", applyFilters);
+searchMode.addEventListener("change", applyFilters);
+sortBy.addEventListener("change", applyFilters);
+
+
+
+/* Pagination Controls */
+document.getElementById("prevBtn").onclick = () => {
+  currentPage--;
+  displayJobs(window.filteredJobs);  // Display filtered jobs when changing page
+};
+document.getElementById("nextBtn").onclick = () => {
+  currentPage++;
+  displayJobs(window.filteredJobs);  // Display filtered jobs when changing page
+};
+
+/* Initial Render */
+window.filteredJobs = jobs;
+applyFilters();
+
+</script>
+
+  <!-- Application Modal -->
+<div id="applyModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+">
+  <div style="
+    background:white;
+    width:90%;
+    max-width:450px;
+    padding:25px;
+    border-radius:8px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.3);
+    border-top:5px solid #8b6f47;
+  ">
+    <h3 style="margin-top:0;">Apply for this Job</h3>
+
+    <input id="appName" type="text" placeholder="Full Name" style="width:100%;padding:10px;margin-top:10px;">
+    <input id="appEmail" type="email" placeholder="Email Address" style="width:100%;padding:10px;margin-top:10px;">
+    <input id="appPhone" type="text" placeholder="Phone Number" style="width:100%;padding:10px;margin-top:10px;">
+    <input id="appCV" type="text" placeholder="Link to CV (Google Drive, Dropbox)" style="width:100%;padding:10px;margin-top:10px;">
+    <textarea id="appMessage" placeholder="Short Cover Message" style="width:100%;padding:10px;margin-top:10px;height:80px;"></textarea>
+
+    <button id="submitApp" style="
+      margin-top:15px;
+      width:100%;
+      padding:12px;
+      background:#1a1a1a;
+      color:white;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+    ">Submit Application</button>
+
+    <button id="closeModal" style="
+      margin-top:10px;
+      width:100%;
+      padding:10px;
+      border:none;
+      background:#b1b1b1;
+      color:white;
+      cursor:pointer;
+      border-radius:5px;
+    ">Cancel</button>
+  </div>
+</div>
+
+</body>
+</html>
