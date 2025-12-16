@@ -158,7 +158,8 @@
 
       <input type="text" name="Apply Value" placeholder="Email address or application link" required />
 
-      <button type="submit">Submit Job</button>
+      <button type="button" id="submitJobBtn">Submit Job</button>
+
     </form>
 
     <a href="./" style="
@@ -175,16 +176,18 @@
 </div>
 
 <script>
-  document.getElementById("postJobForm").addEventListener("submit", function(e) {
-    e.preventDefault(); // 🚫 stop insecure submission
+  document.getElementById("submitJobBtn").addEventListener("click", function () {
+    const form = document.getElementById("postJobForm");
 
     const jobData = {
-      companyName: document.getElementById("companyName").value,
-      phone: document.getElementById("companyPhone").value,
-      title: document.getElementById("jobTitle").value,
-      location: document.getElementById("jobLocation").value,
-      mode: document.getElementById("jobMode").value,
-      description: document.getElementById("jobDescription").value,
+      companyName: form.elements[0].value,
+      jobTitle: form.elements[1].value,
+      phone: form.elements[2].value,
+      location: form.elements[3].value,
+      mode: form.elements[4].value,
+      description: form.elements[5].value,
+      applyMethod: form.elements[6].value,
+      applyValue: form.elements[7].value,
       datePosted: new Date().toISOString().split("T")[0]
     };
 
@@ -192,9 +195,10 @@
 
     alert("Job submitted successfully! We will review it before publishing.");
 
-    this.reset();
+    form.reset();
   });
 </script>
+
 
 
 </body>
