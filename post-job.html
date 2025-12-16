@@ -158,7 +158,8 @@
 
       <input type="text" name="Apply Value" placeholder="Email address or application link" required />
 
-      <button type="button" id="submitJobBtn">Submit Job</button>
+      <button type="submit">Submit Job</button>
+
 
     </form>
 
@@ -176,8 +177,10 @@
 </div>
 
 <script>
-  document.getElementById("submitJobBtn").addEventListener("click", function () {
-    const form = document.getElementById("postJobForm");
+  document.getElementById("postJobForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // stop page reload
+
+    const form = e.target;
 
     const jobData = {
       companyName: form.elements[0].value,
@@ -198,8 +201,6 @@
     form.reset();
   });
 </script>
-
-
 
 </body>
 </html>
