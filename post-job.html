@@ -90,7 +90,8 @@
   <div class="form-box">
     <h2>Job Details</h2>
 
-    <form action="mailto:your@email.com" method="post" enctype="text/plain">
+    <form id="postJobForm" enctype="multipart/form-data">
+
 
       <input type="text" name="Company Name" placeholder="Company Name" required />
 
@@ -172,6 +173,29 @@
 
   </div>
 </div>
+
+<script>
+  document.getElementById("postJobForm").addEventListener("submit", function(e) {
+    e.preventDefault(); // 🚫 stop insecure submission
+
+    const jobData = {
+      companyName: document.getElementById("companyName").value,
+      phone: document.getElementById("companyPhone").value,
+      title: document.getElementById("jobTitle").value,
+      location: document.getElementById("jobLocation").value,
+      mode: document.getElementById("jobMode").value,
+      description: document.getElementById("jobDescription").value,
+      datePosted: new Date().toISOString().split("T")[0]
+    };
+
+    console.log("Job submitted:", jobData);
+
+    alert("Job submitted successfully! We will review it before publishing.");
+
+    this.reset();
+  });
+</script>
+
 
 </body>
 </html>
