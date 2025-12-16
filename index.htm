@@ -24,6 +24,28 @@
       letter-spacing: 1px;
       font-weight: bold;
     }
+    
+    .post-job-link {
+  text-align: center;
+  margin: 18px 0 25px;
+}
+
+.post-job-link a {
+  text-decoration: none;
+  color: #8b6f47;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 8px 16px;
+  border: 1px solid #8b6f47;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
+
+.post-job-link a:hover {
+  background: #8b6f47;
+  color: white;
+}
+
 
     .container {
       max-width: 900px;
@@ -161,6 +183,11 @@
 <body>
 
 <header>JobNow — Find Jobs Easily</header>
+  
+  <div class="post-job-link">
+  <a href="post-job.html">Post a Job</a>
+</div>
+
 
 <div class="container">
 
@@ -217,7 +244,9 @@
     location: "Lagos",
     mode: "Onsite",
     datePosted: "2025-12-13",
-    description: "Sell products, attend to walk-in customers and meet monthly sales targets."
+    description: "Sell products, attend to walk-in customers and meet monthly sales targets.",
+    applyType: "email",
+    applyValue: "hr@company.com"
   },
 
   {
@@ -226,7 +255,9 @@
     location: "Abuja",
     mode: "Remote",
     datePosted: "2025-12-12",
-    description: "Build responsive web interfaces using HTML, CSS and JavaScript."
+    description: "Build responsive web interfaces using HTML, CSS and JavaScript.",
+    applyType: "link",
+    applyValue: "https://forms.gle/example"
   },
 
   {
@@ -263,77 +294,53 @@
     return jobsArr.slice(start, start + jobsPerPage);
   }
 
-  /* Show job details */
-  const jobDetails = document.getElementById("jobDetails");
-  function openJobDetails(job) {
-    jobListings.style.display = "none";
-    document.querySelector('.pagination').style.display = "none";
-    jobDetails.style.display = "block";
+ /* Show job details */
+const jobDetails = document.getElementById("jobDetails");
 
-    // Modal controls
-const modal = document.getElementById("applyModal");
-const closeModalBtn = document.getElementById("closeModal");
+function openJobDetails(job) {
+  jobListings.style.display = "none";
+  document.querySelector(".pagination").style.display = "none";
+  jobDetails.style.display = "block";
 
-// Open modal when Apply Now is clicked
-document.addEventListener("click", function(e) {
-  if (e.target && e.target.id === "applyBtn") {
-    modal.style.display = "flex";
+  let applyLink = "#";
+
+  if (job.applyType === "email") {
+    applyLink = `mailto:${job.applyValue}`;
+  } else if (job.applyType === "link") {
+    applyLink = job.applyValue;
   }
-});
 
-// Close modal
-closeModalBtn.onclick = () => modal.style.display = "none";
+  jobDetails.innerHTML = `
+    <button id="backBtn">Back</button>
 
-// Submit application
-document.getElementById("submitApp").onclick = () => {
-  const app = {
-    name: document.getElementById("appName").value,
-    email: document.getElementById("appEmail").value,
-    phone: document.getElementById("appPhone").value,
-    cv: document.getElementById("appCV").value,
-    message: document.getElementById("appMessage").value,
-    date: new Date().toLocaleString()
+    <h2>${job.title}</h2>
+    <p><strong>Location:</strong> ${job.location}</p>
+    <p><strong>Work Mode:</strong> ${job.mode}</p>
+    <p><strong>Date Posted:</strong> ${job.datePosted}</p>
+    <p>${job.description}</p>
+
+    <a href="${applyLink}" target="_blank" style="
+      display:inline-block;
+      margin-top:20px;
+      padding:14px 22px;
+      background:#8b6f47;
+      color:white;
+      text-decoration:none;
+      border-radius:6px;
+      font-size:15px;
+      font-weight:bold;
+    ">
+      CLICK HERE TO APPLY
+    </a>
+  `;
+
+  document.getElementById("backBtn").onclick = () => {
+    jobDetails.style.display = "none";
+    jobListings.style.display = "block";
+    document.querySelector(".pagination").style.display = "flex";
   };
+}
 
-  // Save to local storage
-  let apps = JSON.parse(localStorage.getItem("jobApplications") || "[]");
-  apps.push(app);
-  localStorage.setItem("jobApplications", JSON.stringify(apps));
-
-  alert("Application submitted successfully!");
-
-  modal.style.display = "none";
-};
-    
-    jobDetails.innerHTML = `
-  <button id="backBtn">Back</button>
-
-  <h2>${job.title}</h2>
-  <p><strong>Location:</strong> ${job.location}</p>
-  <p><strong>Work Mode:</strong> ${job.mode}</p>
-  <p><strong>Date Posted:</strong> ${job.datePosted}</p>
-  <p>${job.description}</p>
-
-  <button id="applyBtn" style="
-    margin-top:20px;
-    padding:12px 20px;
-    background:#8b6f47;
-    color:white;
-    border:none;
-    border-radius:5px;
-    font-size:15px;
-    cursor:pointer;
-  ">Apply Now</button>
-`;
-
-
-
-    document.getElementById("backBtn").onclick = () => {
-      jobDetails.style.display = "none";
-      jobListings.style.display = "block";
-      document.querySelector('.pagination').style.display = "flex";
-    };
-  }
 
  /* Display jobs */
 function displayJobs(filterJobs) {
@@ -404,7 +411,7 @@ applyFilters();
 </script>
 
   <!-- Application Modal -->
-<div id="applyModal" style="
+<!-- <div id="applyModal" style="
   display:none;
   position:fixed;
   top:0; left:0;
@@ -452,7 +459,7 @@ applyFilters();
       border-radius:5px;
     ">Cancel</button>
   </div>
-</div>
-
+</div> -->
+  
 </body>
 </html>
