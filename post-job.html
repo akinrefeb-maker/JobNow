@@ -36,10 +36,6 @@
       border-left: 5px solid #8b6f47;
     }
 
-    h2 {
-      margin-top: 0;
-    }
-
     input, select, textarea {
       width: 100%;
       padding: 12px;
@@ -70,15 +66,6 @@
     button:hover {
       background: #6f5737;
     }
-
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 18px;
-      text-decoration: none;
-      color: #8b6f47;
-      font-weight: bold;
-    }
   </style>
 </head>
 
@@ -90,115 +77,106 @@
   <div class="form-box">
     <h2>Job Details</h2>
 
-    <form id="postJobForm" enctype="multipart/form-data">
+    <form id="postJobForm">
 
+      <input type="text" name="company_name" placeholder="Company Name" required />
 
-      <input type="text" name="Company Name" placeholder="Company Name" required />
+      <input type="text" name="job_title" placeholder="Job Title" required />
 
-<input type="text" name="Job Title" placeholder="Job Title" required />
+      <input type="tel" name="contact_phone" placeholder="Contact Phone Number" required />
 
-<input type="tel" name="Contact Phone" placeholder="Contact Phone Number" required />
+      <select name="location" required>
+        <option value="">Select Location</option>
+        <option>Abia</option>
+        <option>Adamawa</option>
+        <option>Akwa Ibom</option>
+        <option>Anambra</option>
+        <option>Bauchi</option>
+        <option>Bayelsa</option>
+        <option>Benue</option>
+        <option>Borno</option>
+        <option>Cross River</option>
+        <option>Delta</option>
+        <option>Ebonyi</option>
+        <option>Edo</option>
+        <option>Ekiti</option>
+        <option>Enugu</option>
+        <option>Gombe</option>
+        <option>Imo</option>
+        <option>Jigawa</option>
+        <option>Kaduna</option>
+        <option>Kano</option>
+        <option>Katsina</option>
+        <option>Kebbi</option>
+        <option>Kogi</option>
+        <option>Kwara</option>
+        <option>Lagos</option>
+        <option>Nasarawa</option>
+        <option>Niger</option>
+        <option>Ogun</option>
+        <option>Ondo</option>
+        <option>Osun</option>
+        <option>Oyo</option>
+        <option>Plateau</option>
+        <option>Rivers</option>
+        <option>Sokoto</option>
+        <option>Taraba</option>
+        <option>Yobe</option>
+        <option>Zamfara</option>
+        <option>FCT – Abuja</option>
+      </select>
 
-
-      <select name="Location" required>
-  <option value="">Select Location</option>
-  <option>Abia</option>
-  <option>Adamawa</option>
-  <option>Akwa Ibom</option>
-  <option>Anambra</option>
-  <option>Bauchi</option>
-  <option>Bayelsa</option>
-  <option>Benue</option>
-  <option>Borno</option>
-  <option>Cross River</option>
-  <option>Delta</option>
-  <option>Ebonyi</option>
-  <option>Edo</option>
-  <option>Ekiti</option>
-  <option>Enugu</option>
-  <option>Gombe</option>
-  <option>Imo</option>
-  <option>Jigawa</option>
-  <option>Kaduna</option>
-  <option>Kano</option>
-  <option>Katsina</option>
-  <option>Kebbi</option>
-  <option>Kogi</option>
-  <option>Kwara</option>
-  <option>Lagos</option>
-  <option>Nasarawa</option>
-  <option>Niger</option>
-  <option>Ogun</option>
-  <option>Ondo</option>
-  <option>Osun</option>
-  <option>Oyo</option>
-  <option>Plateau</option>
-  <option>Rivers</option>
-  <option>Sokoto</option>
-  <option>Taraba</option>
-  <option>Yobe</option>
-  <option>Zamfara</option>
-  <option>FCT – Abuja</option>
-</select>
-
-
-      <select name="Work Mode" required>
+      <select name="work_mode" required>
         <option value="">Work Mode</option>
-        <option>Remote</option>
-        <option>Onsite</option>
+        <option value="Remote">Remote</option>
+        <option value="Onsite">Onsite</option>
       </select>
 
-      <textarea name="Job Description" placeholder="Job Description" required></textarea>
+      <textarea name="job_description" placeholder="Job Description" required></textarea>
 
-      <select name="Apply Method" required>
+      <select name="apply_method" required>
         <option value="">How should candidates apply?</option>
-        <option>Email</option>
-        <option>Application Link</option>
+        <option value="Email">Email</option>
+        <option value="Application Link">Application Link</option>
       </select>
 
-      <input type="text" name="Apply Value" placeholder="Email address or application link" required />
+      <input type="text" name="apply_value" placeholder="Email address or application link" required />
 
       <button type="submit">Submit Job</button>
 
-
     </form>
 
-    <a href="./" style="
-  display:inline-block;
-  margin-bottom:20px;
-  text-decoration:none;
-  color:#8b6f47;
-  font-weight:bold;
-">
-  ← Back to Job Listings
-</a>
-
+    <a href="./" style="display:inline-block;margin-top:20px;color:#8b6f47;font-weight:bold;text-decoration:none;">
+      ← Back to Job Listings
+    </a>
   </div>
 </div>
 
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 <script>
+  (function () {
+    emailjs.init("iwUKlb4VbW6mtXlnU");
+  })();
+
   document.getElementById("postJobForm").addEventListener("submit", function (e) {
-    e.preventDefault(); // stop page reload
+    e.preventDefault();
 
-    const form = e.target;
-
-    const jobData = {
-      companyName: form.elements[0].value,
-      jobTitle: form.elements[1].value,
-      phone: form.elements[2].value,
-      location: form.elements[3].value,
-      mode: form.elements[4].value,
-      description: form.elements[5].value,
-      applyMethod: form.elements[6].value,
-      applyValue: form.elements[7].value,
-      datePosted: new Date().toISOString().split("T")[0]
-    };
-
-    console.log("Job submitted:", jobData);
-
-    alert("Job submitted successfully! We will review it before publishing.");
-
-    form.reset();
+    emailjs.sendForm(
+      "service_0kkzbql",
+      "template_seib0um",
+      this
+    ).then(
+      function () {
+        alert("Job submitted successfully! We will review it before publishing.");
+        document.getElementById("postJobForm").reset();
+      },
+      function (error) {
+        alert("Submission failed. Please try again.");
+        console.error(error);
+      }
+    );
   });
 </script>
 
