@@ -152,13 +152,13 @@
   </div>
 </div>
 
-<!-- EmailJS -->
+  <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <script>
-  (function () {
-    emailjs.init("iwUKlb4VbW6mtXlnU");
-  })();
+  emailjs.init({
+    publicKey: "iwUKlb4VbW6mtXlnU"
+  });
 
   document.getElementById("postJobForm").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -167,18 +167,19 @@
       "service_0kkzbql",
       "template_seib0um",
       this
-    ).then(
-      function () {
-        alert("Job submitted successfully! We will review it before publishing.");
-        document.getElementById("postJobForm").reset();
-      },
-      function (error) {
-        alert("Submission failed. Please try again.");
-        console.error(error);
-      }
-    );
+    )
+    .then(function () {
+      alert("Job submitted successfully! We will review it before publishing.");
+      document.getElementById("postJobForm").reset();
+    })
+    .catch(function (error) {
+      alert("Submission failed. Check console.");
+      console.error("EmailJS error:", error);
+    });
   });
 </script>
 
+
 </body>
 </html>
+
