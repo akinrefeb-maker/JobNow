@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gig Services – JobNow</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      color: #1a1a1a;
+    }
+
+    header {
+      background: #1a1a1a;
+      padding: 25px;
+      text-align: center;
+      color: #e0e0e0;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .gig-card {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-left: 5px solid #8b6f47;
+    }
+
+    .gig-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .gig-meta {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .gig-description {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .gig-budget {
+      font-weight: bold;
+      color: #8b6f47;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      gap: 10px;
+    }
+
+    .pagination button {
+      padding: 8px 14px;
+      border: none;
+      background: #1a1a1a;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .pagination button.active {
+      background: #8b6f47;
+    }
+
+    .pagination button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      font-weight: bold;
+      color: #8b6f47;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>Gig Services</header>
+  
+  <div style="max-width:1000px;margin:20px auto;padding:0 20px;display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr;">
+  
+  <!-- Search by title -->
+  <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Search gigs by title..."
+    style="padding:10px;"
+  />
+
+  <!-- Category filter -->
+  <select id="categoryFilter" style="padding:10px;">
+    <option value="all">All Categories</option>
+    <option value="Graphic Designer">Graphic Designer</option>
+    <option value="Voice-over Artist">Voice-over Artist</option>
+    <option value="Video Editor">Video Editor</option>
+    <option value="Photo Editor">Photo Editor</option>
+    <option value="Copywriter">Copywriter</option>
+    <option value="Website Developer">Website Developer</option>
+    <option value="Social Media Manager">Social Media Manager</option>
+    <option value="Sales">Sales</option>
+    <option value="Architecture Design">Architecture Design</option>
+  </select>
+
+  <!-- Sort by date -->
+  <select id="sortFilter" style="padding:10px;">
+    <option value="newest">Newest First</option>
+    <option value="oldest">Oldest First</option>
+  </select>
+
+</div>
+
+<div class="container" id="gigContainer"></div>
+
+<div class="pagination" id="pagination"></div>
+
+<a href="./" class="back-link">← Back to Job Listings</a>
+ 
+<script>
+  // =========================
+  // GIG DATA
+  // =========================
+  const gigs = [
+    {
+      title: "Logo Design for Startup",
+      category: "Graphic Designer",
+      description: "Need a modern logo for a tech startup",
+      budget: "₦50,000",
+      datePosted: "2025-01-10"
+    },
+    {
+      title: "YouTube Video Editing",
+      category: "Video Editor",
+      description: "Edit weekly YouTube videos",
+      budget: "₦80,000",
+      datePosted: "2025-01-11"
+    },
+    {
+      title: "Website Landing Page",
+      category: "Website Developer",
+      description: "Build a responsive landing page",
+      budget: "₦120,000",
+      datePosted: "2025-01-12"
+    },
+    {
+      title: "Product Voice-over",
+      category: "Voice-over Artist",
+      description: "30-second voice-over for ad",
+      budget: "₦40,000",
+      datePosted: "2025-01-13"
+    }
+  ];
+
+  // =========================
+  // STATE
+  // =========================
+  const gigsPerPage = 10;
+  let currentPage = 1;
+  let filteredGigs = [...gigs];
+
+  // =========================
+  // APPLY FILTERS
+  // =========================
+  function applyFilters() {
+    const searchText = document.getElementById("searchInput").value.toLowerCase();
+    const category = document.getElementById("categoryFilter").value;
+    const sort = document.getElementById("sortFilter").value;
+
+    filteredGigs = gigs.filter(gig => {
+      const matchesTitle = gig.title.toLowerCase().includes(searchText);
+      const matchesCategory = category === "all" || gig.category === category;
+      return matchesTitle && matchesCategory;
+    });
+
+    filteredGigs.sort((a, b) => {
+      return sort === "newest"
+        ? new Date(b.datePosted) - new Date(a.datePosted)
+        : new Date(a.datePosted) - new Date(b.datePosted);
+    });
+
+    currentPage = 1;
+    renderGigs();
+  }
+
+  // =========================
+  // RENDER GIGS
+  // =========================
+  function renderGigs() {
+    const container = document.getElementById("gigContainer");
+    container.innerHTML = "";
+
+    const start = (currentPage - 1) * gigsPerPage;
+    const end = start + gigsPerPage;
+    const gigsToShow = filteredGigs.slice(start, end);
+
+    if (gigsToShow.length === 0) {
+      container.innerHTML = "<p>No gigs found.</p>";
+      renderPagination();
+      return;
+    }
+
+    gigsToShow.forEach(gig => {
+      const div = document.createElement("div");
+      div.className = "gig-card";
+
+      div.innerHTML = `
+        <div class="gig-title">${gig.title}</div>
+        <div class="gig-meta">${gig.category} • Posted on ${gig.datePosted}</div>
+        <div class="gig-description">${gig.description}</div>
+        <div class="gig-budget">Budget: ${gig.budget}</div>
+      `;
+
+      container.appendChild(div);
+    });
+
+    renderPagination();
+  }
+
+  // =========================
+  // PAGINATION
+  // =========================
+  function renderPagination() {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
+
+    const totalPages = Math.ceil(filteredGigs.length / gigsPerPage);
+
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className = i === currentPage ? "active" : "";
+
+      btn.addEventListener("click", () => {
+        currentPage = i;
+        renderGigs();
+      });
+
+      pagination.appendChild(btn);
+    }
+  }
+
+  // =========================
+  // EVENT LISTENERS
+  // =========================
+  document.getElementById("searchInput").addEventListener("input", applyFilters);
+  document.getElementById("categoryFilter").addEventListener("change", applyFilters);
+  document.getElementById("sortFilter").addEventListener("change", applyFilters);
+
+  // INITIAL LOAD
+  applyFilters();
+</script>
+
+</body>
+</html>
