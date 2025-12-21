@@ -135,35 +135,38 @@
 <body>
 
 <header>Gig Services</header>
-  
+
+<div class="container">
+
   <div class="gig-filters">
-  <input type="text" id="searchInput" placeholder="Search by title..." />
+    <input type="text" id="searchInput" placeholder="Search gigs..." />
+    <input type="date" id="dateFilter" />
 
-  <input type="date" id="dateFilter" />
+    <select id="categoryFilter">
+      <option value="all">All Categories</option>
+      <option value="Graphic Designer">Graphic Designer</option>
+      <option value="Voice-over Artist">Voice-over Artist</option>
+      <option value="Video Editor">Video Editor</option>
+      <option value="Photo Editor">Photo Editor</option>
+      <option value="Copywriter">Copywriter</option>
+      <option value="Website Developer">Website Developer</option>
+      <option value="Social Media Manager">Social Media Manager</option>
+      <option value="Sales">Sales</option>
+      <option value="Architecture Design">Architecture Design</option>
+    </select>
 
-  <select id="categoryFilter">
-    <option value="all">All Categories</option>
-    <option value="Graphic Designer">Graphic Designer</option>
-    <option value="Voice-over Artist">Voice-over Artist</option>
-    <option value="Video Editor">Video Editor</option>
-    <option value="Photo Editor">Photo Editor</option>
-    <option value="Copywriter">Copywriter</option>
-    <option value="Website Developer">Website Developer</option>
-    <option value="Social Media Manager">Social Media Manager</option>
-    <option value="Sales">Sales</option>
-    <option value="Architecture Design">Architecture Design</option>
-  </select>
+    <select id="sortFilter">
+      <option value="newest">Newest First</option>
+      <option value="oldest">Oldest First</option>
+    </select>
+  </div>
 
-  <select id="sortFilter">
-    <option value="newest">Newest First</option>
-    <option value="oldest">Oldest First</option>
-  </select>
+  <div id="gigContainer"></div>
+
+  <div class="pagination" id="pagination"></div>
+
 </div>
 
-
-<div class="container" id="gigContainer"></div>
-
-<div class="pagination" id="pagination"></div>
 
 <a href="./" class="back-link">← Back to Job Listings</a>
  
