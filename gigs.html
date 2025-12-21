@@ -100,18 +100,12 @@
 
 <header>Gig Services</header>
   
-  <div style="max-width:1000px;margin:20px auto;padding:0 20px;display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr;">
-  
-  <!-- Search by title -->
-  <input 
-    type="text" 
-    id="searchInput" 
-    placeholder="Search gigs by title..."
-    style="padding:10px;"
-  />
+  <div class="gig-filters">
+  <input type="text" id="searchInput" placeholder="Search by title..." />
 
-  <!-- Category filter -->
-  <select id="categoryFilter" style="padding:10px;">
+  <input type="date" id="dateFilter" />
+
+  <select id="categoryFilter">
     <option value="all">All Categories</option>
     <option value="Graphic Designer">Graphic Designer</option>
     <option value="Voice-over Artist">Voice-over Artist</option>
@@ -124,13 +118,12 @@
     <option value="Architecture Design">Architecture Design</option>
   </select>
 
-  <!-- Sort by date -->
-  <select id="sortFilter" style="padding:10px;">
+  <select id="sortFilter">
     <option value="newest">Newest First</option>
     <option value="oldest">Oldest First</option>
   </select>
-
 </div>
+
 
 <div class="container" id="gigContainer"></div>
 
