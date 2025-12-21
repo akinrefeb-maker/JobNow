@@ -23,40 +23,27 @@
     }
 
     .gig-filters {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 12px;
-  margin: 20px 0;
+  margin-bottom: 25px;
 }
 
 .gig-filters input,
 .gig-filters select {
+  width: 100%;
   padding: 12px;
-  font-size: 16px; /* prevents mobile zoom */
+  font-size: 16px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  width: 100%;
 }
 
-/* Desktop */
+/* Desktop layout (matches job listing page) */
 @media (min-width: 768px) {
   .gig-filters {
-    flex-direction: row;
-  }
-
-  .gig-filters input,
-  .gig-filters select {
-    width: auto;
-    min-width: 180px;
+    grid-template-columns: repeat(4, 1fr);
   }
 }
-
-/* Mobile */
-@media (max-width: 767px) {
-  .gig-filters {
-    flex-direction: column;
-  }
-}
-
 
     .container {
       max-width: 1000px;
