@@ -232,26 +232,30 @@
   // =========================
   // APPLY FILTERS
   // =========================
-  function applyFilters() {
-    const searchText = document.getElementById("searchInput").value.toLowerCase();
-    const category = document.getElementById("categoryFilter").value;
-    const sort = document.getElementById("sortFilter").value;
+function applyFilters() {
+  const searchText = document.getElementById("searchInput").value.toLowerCase();
+  const category = document.getElementById("categoryFilter").value;
+  const sort = document.getElementById("sortFilter").value;
+  const selectedDate = document.getElementById("dateFilter").value;
 
-    filteredGigs = gigs.filter(gig => {
-      const matchesTitle = gig.title.toLowerCase().includes(searchText);
-      const matchesCategory = category === "all" || gig.category === category;
-      return matchesTitle && matchesCategory;
-    });
+  filteredGigs = gigs.filter(gig => {
+    const matchesTitle = gig.title.toLowerCase().includes(searchText);
+    const matchesCategory = category === "all" || gig.category === category;
+    const matchesDate =
+      !selectedDate || gig.datePosted === selectedDate;
 
-    filteredGigs.sort((a, b) => {
-      return sort === "newest"
-        ? new Date(b.datePosted) - new Date(a.datePosted)
-        : new Date(a.datePosted) - new Date(b.datePosted);
-    });
+    return matchesTitle && matchesCategory && matchesDate;
+  });
 
-    currentPage = 1;
-    renderGigs();
-  }
+  filteredGigs.sort((a, b) => {
+    return sort === "newest"
+      ? new Date(b.datePosted) - new Date(a.datePosted)
+      : new Date(a.datePosted) - new Date(b.datePosted);
+  });
+
+  currentPage = 1;
+  renderGigs();
+}
 
   // =========================
   // RENDER GIGS
@@ -316,6 +320,7 @@
   document.getElementById("searchInput").addEventListener("input", applyFilters);
   document.getElementById("categoryFilter").addEventListener("change", applyFilters);
   document.getElementById("sortFilter").addEventListener("change", applyFilters);
+  document.getElementById("dateFilter").addEventListener("change", applyFilters);
 
   // INITIAL LOAD
   applyFilters();
