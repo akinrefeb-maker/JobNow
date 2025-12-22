@@ -159,27 +159,52 @@
   emailjs.init({
     publicKey: "iwUKlb4VbW6mtXlnU"
   });
+  
+  function saveJobToLocalStorage(job) {
+  const existingJobs = JSON.parse(localStorage.getItem("jobnow_jobs")) || [];
+  existingJobs.push(job);
+  localStorage.setItem("jobnow_jobs", JSON.stringify(existingJobs));
+}
 
   document.getElementById("postJobForm").addEventListener("submit", function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    emailjs.sendForm(
-      "service_0kkzbql",
-      "template_seib0um",
-      this
-    )
-    .then(function () {
-      alert("Job submitted successfully! We will review it before publishing.");
-      document.getElementById("postJobForm").reset();
-    })
-    .catch(function (error) {
-      alert("Submission failed. Check console.");
-      console.error("EmailJS error:", error);
-    });
-  });
+  const form = this;
+
+  const jobData = {
+    company: form.company_name.value,
+    title: form.job_title.value,
+    phone: form.contact_phone.value,
+    location: form.location.value,
+    mode: form.work_mode.value,
+    description: form.job_description.value,
+    applyMethod: form.apply_method.value,
+    applyValue: form.apply_value.value,
+    datePosted: new Date().toISOString().split("T")[0]
+  };
+
+  // ✅ SAVE LOCALLY (ALWAYS WORKS)
+  saveJobToLocalStorage(jobData);
+
+  // 📧 TRY EMAILJS (OPTIONAL)
+  emailjs.sendForm(
+    "service_0kkzbql",
+    "template_seib0um",
+    form
+  ).then(
+    function () {
+      alert("Job submitted successfully!");
+    },
+    function () {
+      alert("Job saved successfully. Email delivery failed.");
+    }
+  );
+
+  form.reset();
+});
+
 </script>
 
 
 </body>
 </html>
-
